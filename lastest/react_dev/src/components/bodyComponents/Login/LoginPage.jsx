@@ -1,20 +1,22 @@
 import React from "react";
 import {browserHistory} from "react-router";
 import Bg from "../../../imgs/regesit_bg.jpg";
-import {Input,Icon,Button} from "antd";
+import {Input, Icon, Button, Form} from "antd";
+const FormItem = Form.Item;
+class LoginPage extends React.Component {
+   login() {
 
-export default class LoginPage extends React.Component{
-    onChangeUserName(e){
-        // console.log(e.target.value);
-    }
-    ClickBtn(){
-
-    }
-    login(){
+        this.props.form.validateFields(function (err, vals) {
+            if (!err) {
+                //vals 为表单的值 发送求验证
+                browserHistory.push(`/LOGIN/SportType`);
+            }
+        })
         // var tar=this.props.location.query.to;
-        browserHistory.push(`/LOGIN/SportType`);
     }
-    render(){
+
+    render() {
+        const {getFieldDecorator} = this.props.form;
         return (<div>
             <div style={{
                 width: "100%",
@@ -34,33 +36,49 @@ export default class LoginPage extends React.Component{
                     <div style={{fontSize: "14px"}}>Shunyi District student activity management center</div>
                 </div>
                 <div style={{
-                    padding:"45px 45px 0px 45px",
+                    padding: "45px 45px 0px 45px",
                     width: "372px",
                     height: "268px",
                     backgroundColor: "#FFFFFF",
                     margin: "0 auto",
                     borderRadius: "10px"
                 }}>
-                    <div style={{marginBottom:"25px"}}>
-                        <Input
-                            size="large"
-                            onPressEnter={this.ClickBtn.bind(this)}
-                            placeholder="请输入账号"
-                            prefix={<Icon type="user" />}
-                            onChange={this.onChangeUserName.bind(this)}
-                        />
+                    <div style={{height: 125}}>
+
+                        <Form>
+                            <div style={{marginBottom: "7px"}}>
+                                <FormItem>
+                                    {getFieldDecorator("username", {rules: [{required: true, message: '请输入账号!'}]})(
+                                        <Input
+                                            size="large"
+                                            onPressEnter={this.login.bind(this)}
+                                            placeholder="请输入账号"
+                                            prefix={<Icon type="user"/>}
+                                        />)}
+                                </FormItem>
+
+
+                            </div>
+                            <div style={{marginBottom: "7px"}}>
+
+                                <FormItem>
+                                    {getFieldDecorator("password", {rules: [{required: true, message: '请输入密码!'}]})(
+                                        <Input
+                                            onPressEnter={this.login.bind(this)}
+                                            size="large"
+                                            placeholder="请输入密码"
+                                            prefix={<Icon type="lock"/>}
+                                        />)}
+                                </FormItem>
+                            </div>
+                        </Form>
                     </div>
-                    <div style={{marginBottom:"25px"}}>
-                        <Input
-                            size="large"
-                            placeholder="请输入密码"
-                            prefix={<Icon type="lock" />}
-                            onChange={this.onChangeUserName.bind(this)}
-                        />
-                    </div>
-                    <div style={{marginBottom:"20px"}}><Button onClick={this.login.bind(this)} style={{width:"100%",height:"40px"}} type="primary" size="large">登陆</Button></div>
-                    <div style={{textAlign:"right"}}>
-                        <span style={{cursor:"pointer"}}>忘记密码？ </span> | <span style={{cursor:"pointer"}}> 注册新账号</span>
+                    <div style={{marginBottom: "20px"}}><Button onClick={this.login.bind(this)}
+                                                                style={{width: "100%", height: "40px"}} type="primary"
+                                                                size="large">登陆</Button></div>
+                    <div style={{textAlign: "right"}}>
+                        <span style={{cursor: "pointer"}}>忘记密码？ </span> | <span
+                        style={{cursor: "pointer"}}> 注册新账号</span>
                     </div>
                 </div>
             </div>
@@ -71,3 +89,5 @@ export default class LoginPage extends React.Component{
 
     }
 }
+const loin = Form.create()(LoginPage);
+export default loin;

@@ -1,19 +1,11 @@
 import React, {Component} from "react";
-import {Icon, Button, Checkbox, Select, Input, DatePicker, message, Spin} from "antd";
+import {Icon, Button, Checkbox, Select, Input, DatePicker, message, Form} from "antd";
+const FormItem = Form.Item;
 const CheckboxGroup = Checkbox.Group;
 const Option = Select.Option;
-moment.locale('zh-cn')
+moment.locale('zh-cn');
 
-const ldInp = [
-    "学校名称",
-    "领队名称",
-    "领队名称",
-    "联系方式",
-    "教练名称",
-    "联系方式",
-    "教练名称",
-    "联系方式"
-];
+
 const projects = [
 
     "25米障碍往返（蛇形)",
@@ -97,21 +89,15 @@ class Inputs extends Component {
 
     }
 
-    Selected(ref,val) {
+    Selected(ref, val) {
         var obj = {};
         obj[ref] = val;
         this.setState(obj)
     }
 
     render() {
-        let arr = this.props.data || [];
-        var data = {};
-        if (arr.length > 0) {
-            for (var i = 0; i < arr.length; i++) {
-                var key = Object.keys(arr[i])[0]
-                data[key] = arr[i][key]
-            }
-        }
+        const {getFieldDecorator} = this.props.form;
+        const config={ rules: [{ required: true, message: 'Please input time!' }]}
 
 
         return (<li style={{borderBottom: "1px dashed #D7D7D7"}} key={this.props.k}>
@@ -123,20 +109,19 @@ class Inputs extends Component {
                 <span
                     style={{marginLeft: "10px", color: "#595959"}}>{"序号 " + (this.props.k + 1)}</span>
             </div>
+            <Form>
             <ul>
                 <li className="clear"
                     style={{width: "25%", height: "50px", float: "left"}}>
-                    <label style={{
-                        marginTop: "5px",
-                        color: "#595959",
-                        width: "82px",
-                        textAlign: "right",
-                        float: 'left'
-                    }}> 教育ID：</label>
-
-                    <div style={{paddingLeft: "20px", float: 'left'}}>
-                        <Input ref="eduID" placeholder="请输入教育ID" defaultValue={data["教育ID"] || ""}/>
-                    </div>
+                    <FormItem
+                        label="教育ID"
+                        labelCol={{span: 6}}
+                        wrapperCol={{span: 14, offset: 1}} hasFeedback
+                    >
+                        {getFieldDecorator('eduId', config)(
+                            <Input placeholder="请输入教育ID"/>
+                        )}
+                    </FormItem>
                 </li>
                 <li className="clear"
                     style={{width: "25%", height: "50px", float: "left"}}>
@@ -277,9 +262,7 @@ class Inputs extends Component {
                     }}> 年级：</label>
                     <div style={{paddingLeft: "20px", float: 'left'}}>
                         <Select
-                            onSelect={this.Selected.bind(this,"年级")}
                             showSearch
-                            defaultValue={data["年级"]}
                             style={{width: 160}}
                             placeholder="请选择年级"
                             optionFilterProp="children"
@@ -354,6 +337,7 @@ class Inputs extends Component {
                 }}>确定</Button>
                 </li>
             </ul>
+            </Form>
         </li>)
     }
 
@@ -414,6 +398,145 @@ class Show extends Component {
         </li>)
     }
 }
+const li = {
+    height: "58px",
+    width: "374px",
+    marginBottom: "16px",
+    float: "left"
+}
+class LeaderF extends Component {
+    submit(){
+        this.props.form.validateFields(function(err,vals){
+            if(!err){
+                //提交后台
+                console.log(vals);
+            }
+        })
+    }
+    componentDidMount(){
+        //设定默认值
+        this.props.form.setFieldsValue({schoolId:"123124124"})
+    }
+    render() {
+        const {getFieldDecorator} = this.props.form;
+        return (<div>
+            <h1 style={{
+                height: "90px",
+                position: "relative",
+                padding: "42px 0 0 26px",
+                marginRight: "4px",
+                borderBottom: "1px solid #E5E5E5",
+                fontSize: "18px"
+            }}>
+                <i style={{
+                    position: "absolute",
+                    left: 0,
+                    top: "46px",
+                    width: "7px",
+                    height: "18px",
+                    backgroundColor: "blue",
+                    borderRadius: "4px"
+                }}></i>
+                <span style={{
+                    letterSpacing: "2px"
+                }}>领队信息</span>
+            </h1>
+            <div style={{
+                position: "relative",
+                width: "920px",
+                padding: "32px 110px 0 0",
+                margin: "0 auto"
+            }}>
+                <Form>
+                    <ul className="clear leader">
+                        <li style={li}>
+                            <FormItem label={"学校名称"} labelCol={{span: 6}}
+                                      wrapperCol={{span: 14, offset: 1}} hasFeedback>
+                                {getFieldDecorator("schoolId", {
+
+                                    rules: [{required: true, message: "学校名称不能为空"}],
+                                })(
+                                    <Input style={{width: 213}} placeholder={"请输入学校名称"}/>
+                                )}
+                            </FormItem>
+                        </li>
+                        <li style={li}></li>
+                        <li style={li}>
+                            <FormItem label={"领队名称"} labelCol={{span: 6}}
+                                      wrapperCol={{span: 14, offset: 1}} hasFeedback>
+                                {getFieldDecorator("leader", {
+                                    rules: [{required: true, message: "领队名称不能为空"}],
+                                })(
+                                    <Input style={{width: 213}} placeholder={"请输入领队名称"}/>
+                                )}
+                            </FormItem></li>
+                        <li style={li}>
+                            <FormItem label={"联系方式"} labelCol={{span: 6}}
+                                      wrapperCol={{span: 14, offset: 1}} hasFeedback>
+                                {getFieldDecorator("tel", {
+
+                                    rules: [{required: true, message: ("请输入正确的手机号"), pattern: /^1[34578]\d{9}$/}],
+                                })(
+                                    <Input style={{width: 213}} placeholder={"请输入联系方式"}/>
+                                )}
+                            </FormItem></li>
+                        <li style={li}>
+                            <FormItem label={"教练名称"} labelCol={{span: 6}}
+                                      wrapperCol={{span: 14, offset: 1}} hasFeedback>
+                                {getFieldDecorator("coach1", {
+                                    rules: [{required: true, message: "教练名称不能为空"}],
+                                })(<Input style={{width: 213}} placeholder={"请输入教练名称"}/>
+                                )}
+                            </FormItem></li>
+                        <li style={li}>
+                            <FormItem label={"联系方式"} labelCol={{span: 6}}
+                                      wrapperCol={{span: 14, offset: 1}} hasFeedback>
+                                {getFieldDecorator("tel1", {
+
+                                    rules: [{required: true, message: ("请输入正确的手机号" ), pattern: /^1[34578]\d{9}$/}],
+                                })(
+                                    <Input style={{width: 213}} placeholder={"请输入联系方式"}/>
+                                )}
+                            </FormItem></li>
+                        <li style={li}>
+                            <FormItem label={"教练名称"} labelCol={{span: 6}}
+                                      wrapperCol={{span: 14, offset: 1}} hasFeedback>
+                                {getFieldDecorator("coach2", {
+
+                                    rules: [{required: true, message: "教练名称不能为空"}],
+                                })(
+                                    <Input style={{width: 213}} placeholder={"请输入教练名称"}/>
+                                )}
+                            </FormItem></li>
+                        <li style={li}>
+                            <FormItem label={"联系方式"} labelCol={{span: 6}}
+                                      wrapperCol={{span: 14, offset: 1}} hasFeedback>
+                                {getFieldDecorator("tel2", {
+
+                                    rules: [{required: true, message: "请输入正确的手机号", pattern: /^1[34578]\d{9}$/}],
+                                })(
+                                    <Input style={{width: 213}} placeholder={"请输入联系方式"}/>
+                                )}
+                            </FormItem>
+                        </li>
+
+
+                    </ul>
+                </Form>
+                <Button type="primary"
+                        onClick={this.submit.bind(this)}
+                        style={{
+                            bottom: 42,
+                            right: -40,
+                            position: "absolute",
+                            width: 94,
+                            height: 32
+                        }}>确定</Button>
+            </div>
+        </div>)
+    }
+}
+const Leader = Form.create()(LeaderF)
 //TODO 待完成
 /**
  * 1.登录获取获取utoken,学校id并存入session
@@ -526,8 +649,8 @@ export default class SignPage extends React.Component {
                         data["户籍所在"] = allMation[i].location
                         data["是否为京"] = allMation[i].ibCapital == "0" ? "否" : "是";
                         data["学籍号"] = allMation[i].studentNum
-                        data["年级"] = numTgrade(allMation[i].grade,"年级")||""
-                        data["班级"] = numTgrade(allMation[i].inClass,"班级") || ""
+                        data["年级"] = numTgrade(allMation[i].grade, "年级") || ""
+                        data["班级"] = numTgrade(allMation[i].inClass, "班级") || ""
                         data["参赛项目"] = allMation[i].addProject || []
                         obj.data = data
                         manTeam.push(obj);
@@ -572,15 +695,15 @@ export default class SignPage extends React.Component {
         var _this = this;
 
         //TODO 发送请求成功后删除
-        var newArr ;
+        var newArr;
         if (type == "manTeam") {
 
             newArr = [...this.state.manTeam];
 
-                newArr.splice(k, 1)
-                this.setState({
-                    manTeam: newArr
-                })
+            newArr.splice(k, 1)
+            this.setState({
+                manTeam: newArr
+            })
 
         } else {
             newArr = [...this.state.relayRace];
@@ -589,9 +712,8 @@ export default class SignPage extends React.Component {
                 relayRace: newArr
             })
         }
-        return ;
+        return;
         //TODO --------------以下为接口部分------------------
-
 
 
         if (type == "manTeam") {
@@ -655,13 +777,13 @@ export default class SignPage extends React.Component {
         //获取value值，发送请求成功后
         var newArr = []
         var objValue = {edit: false, data: arr};//状态改为不编辑
-        if (type == "manTeam"){
+        if (type == "manTeam") {
             newArr = [...this.state.manTeam];
             newArr.splice(k, 1, objValue);
             _this.setState({
                 manTeam: newArr
             })
-        }else{
+        } else {
             newArr = [...this.state.relayRace];
             newArr.splice(k, 1, objValue);
             _this.setState({
@@ -670,33 +792,20 @@ export default class SignPage extends React.Component {
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-            return  ;
+        return;
         //TODO ------------以下为接口介入部分------------------
-        var data={};//后台传递数据
+        var data = {};//后台传递数据
         //
-        data.educateId="";
-        data.username="";
-        data.birthday="";
-        data.IDcard="";
-        data.sex="";
-        data.nation="";
-        data.location="";
-        data.ibCapital="";
-        data.studentNum="";
-       //TODO groupTypeid??????????
-
-
+        data.educateId = "";
+        data.username = "";
+        data.birthday = "";
+        data.IDcard = "";
+        data.sex = "";
+        data.nation = "";
+        data.location = "";
+        data.ibCapital = "";
+        data.studentNum = "";
+        //TODO groupTypeid??????????
 
 
         if (type == "manTeam") {
@@ -722,11 +831,11 @@ export default class SignPage extends React.Component {
                 //data学校的id
                 $.ajax({
                     url: `http://max.mydanweb.com/index.php?g=Api&m=Apply&a=addStuden&userToken=${this.state.userToken}`,
-                    data:  JSON.stringify(data),
+                    data: JSON.stringify(data),
                     success: function (result) {
                         if (result.code == "1") {
 
-                            objValue.id=result.data.id
+                            objValue.id = result.data.id
                             newArr.splice(k, 1, objValue);
                             _this.setState({
                                 manTeam: newArr
@@ -776,7 +885,7 @@ export default class SignPage extends React.Component {
         }
         if (bool) {
             alert("格式正确，可以提交")
-            return ;
+            return;
             var data = [];
             //data[0][Identity]  身份 1＝领队  2＝教练
             data[0] = {
@@ -841,69 +950,7 @@ export default class SignPage extends React.Component {
                     <span style={{color: "#258ACC"}}>学校信息填写</span>
                 </span>
             </h1>
-            <div>
-                <h1 style={{
-                    height: "90px",
-                    position: "relative",
-                    padding: "42px 0 0 26px",
-                    marginRight: "4px",
-                    borderBottom: "1px solid #E5E5E5",
-                    fontSize: "18px"
-                }}>
-                    <i style={{
-                        position: "absolute",
-                        left: 0,
-                        top: "46px",
-                        width: "7px",
-                        height: "18px",
-                        backgroundColor: "blue",
-                        borderRadius: "4px"
-                    }}></i>
-                    <span style={{
-                        letterSpacing: "2px"
-                    }}>领队信息</span>
-                </h1>
-                <div style={{
-                    position: "relative",
-                    width: "920px",
-                    padding: "32px 110px 0 0",
-                    margin: "0 auto"
-                }}>
-
-
-                    <ul className="clear leader">
-                        {ldInp.map((v, k) => (<li
-                            key={k}
-                            style={{
-                                height: "48px",
-                                width: "374px",
-                                marginBottom: "16px",
-                                float: "left"
-                            }}>
-                            <div style={{display: k == 1 ? "none" : "block"}}>
-                                <span style={{color: "red"}}>*</span> <span
-                                style={{margin: "0 10px"}}>{v + " :"}</span><input type="text" style={{
-                                border: "1px solid #D8D8D8",
-                                borderRadius: "4px",
-                                width: "213px",
-                                padding: "14px 0 14px 20px"
-                            }} placeholder={"请输入" + v}/>
-                            </div>
-                        </li>))}
-                    </ul>
-
-
-                    <Button type="primary"
-                            onClick={this.leaderMation.bind(this)}
-                            style={{
-                                bottom: "18px",
-                                right: "80px",
-                                position: "absolute",
-                                width: "132px",
-                                height: "46px"
-                            }}>确定</Button>
-                </div>
-            </div>
+            <Leader/>
             <ul style={{minHeight: "200px"}}>
                 <li>
                     <h1 style={{
@@ -1072,8 +1119,8 @@ function gradeTnum(grade) {
 
 //TODO  编辑或新增字段，提交时班级名转换，数据转换， 参赛项目的获取
 /*
-* react报错信息
-*VM22605:6 Uncaught Error: Minified React error #119; visit http://facebook.github.io/react/docs/error-decoder.html?invariant=119 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
+ * react报错信息
+ *VM22605:6 Uncaught Error: Minified React error #119; visit http://facebook.github.io/react/docs/error-decoder.html?invariant=119 for the full message or use the non-minified dev environment for full errors and additional helpful warnings.
  at n (eval at globalEval (jquery.js:330), <anonymous>:6:1367)
  at Object.addComponentAsRefTo (eval at globalEval (jquery.js:330), <anonymous>:23:15227)
  at r (eval at globalEval (jquery.js:330), <anonymous>:23:16521)
@@ -1084,5 +1131,5 @@ function gradeTnum(grade) {
  at r.closeAll (eval at globalEval (jquery.js:330), <anonymous>:6:23692)
  at r.perform (eval at globalEval (jquery.js:330), <anonymous>:6:23181)
  at o.perform (eval at globalEval (jquery.js:330), <anonymous>:6:23098)
-*
-* */
+ *
+ * */

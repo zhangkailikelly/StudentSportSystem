@@ -19,8 +19,8 @@ class LoginPage extends React.Component {
             if (!err) {
 
                 //TODO test
-                browserHistory.push(`/LOGIN/SportType`);
-                return;
+                //browserHistory.push(`/LOGIN/SportType`);
+                //return;
 
 
                 //vals 为表单的值 发送求验证

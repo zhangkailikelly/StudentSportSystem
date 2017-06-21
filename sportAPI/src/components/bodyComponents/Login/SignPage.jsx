@@ -542,7 +542,7 @@ export default class SignPage extends React.Component {
                 {eduNum: ["学籍号"]},
                 {grade: ["年级"]},
                 {classes: ["班级"]},
-                {item: ["参赛项目"]}
+                {inProject: ["参赛项目"]}
             ],
             relayRace: [{edit: true}],
             manTeam: [{

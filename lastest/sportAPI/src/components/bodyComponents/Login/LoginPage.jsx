@@ -29,20 +29,24 @@ class LoginPage extends React.Component {
                     type: "post",
                     success: function (result) {
                         if (result.code == "1") {
-                            $.ajax({
-                                url: `http://max.mydanweb.com/index.php?g=Api&m=BaseCode&a=getAppId`,
-                                type: "post",
-                                data: vals,
-                                success: function (result1) {
-                                    if (result1.code == "1") {
                                         sessionStorage.setItem("data", JSON.stringify(result.data))
-                                        sessionStorage.setItem("ApiId", JSON.stringify(result1.data.AppId))
                                         browserHistory.push(`/LOGIN/SportType`);
-                                    } else {
-                                        error()
-                                    }
-                                }
-                            })
+
+
+                            // $.ajax({
+                            //     url: `http://max.mydanweb.com/index.php?g=Api&m=BaseCode&a=getAppId`,
+                            //     type: "post",
+                            //     data: vals,
+                            //     success: function (result1) {
+                            //         if (result1.code == "1") {
+                            //             sessionStorage.setItem("data", JSON.stringify(result.data))
+                            //             sessionStorage.setItem("ApiId", JSON.stringify(result1.data.AppId))
+                            //             browserHistory.push(`/LOGIN/SportType`);
+                            //         } else {
+                            //             error()
+                            //         }
+                            //     }
+                            // })
                         } else {
                             error()
                         }
@@ -105,6 +109,7 @@ class LoginPage extends React.Component {
                                 <FormItem>
                                     {getFieldDecorator("password", {rules: [{required: true, message: '请输入密码!'}]})(
                                         <Input
+                                            type="password"
                                             onPressEnter={this.login.bind(this)}
                                             size="large"
                                             placeholder="请输入密码"

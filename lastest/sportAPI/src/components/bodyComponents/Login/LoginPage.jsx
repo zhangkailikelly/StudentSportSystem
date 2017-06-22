@@ -28,6 +28,7 @@ class LoginPage extends React.Component {
                     url: `http://max.mydanweb.com/index.php?g=Api&m=Public&a=doLogin&username=${vals.username}&password=${vals.password}`,
                     type: "post",
                     success: function (result) {
+                        console.log(123)
                         if (result.code == "1") {
                                         sessionStorage.setItem("data", JSON.stringify(result.data))
                                         browserHistory.push(`/LOGIN/SportType`);
